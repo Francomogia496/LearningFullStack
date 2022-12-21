@@ -24,8 +24,8 @@ result = document.getElementById('ListaProductos')
 
 // ------------------------------- FUNCIONES -----------------------------
 
-function initItems(){
-    fetchData();
+async function initItems(){
+    await fetchData();
 
     let items = document.getElementsByClassName('items-grilla');
 
