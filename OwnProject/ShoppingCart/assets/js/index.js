@@ -1,10 +1,9 @@
-let productoNombre, valorCosto, porcGanancia, eleccion, pagaEnCuotas
-let valorCuotas, cantCuotas, cuota, cantUnidades, total, searchTxt, arrItems, btnAddToCarrito, ArrBotonesCarrito
+let searchTxt, arrItems, btnAddToCarrito, ArrCartButtons
 let btnSearch, result
 const searchBar = document.getElementById('SearchBar');
 let items = []
-let productos = []
-let carrito = []
+let products = []
+let shopCart = []
 
 eventListeners();
 
@@ -19,8 +18,6 @@ function eventListeners(){
 
 btnSearch = document.getElementById('BtnSearch')
 result = document.getElementById('ListaProductos')
-
-
 
 // ------------------------------- FUNCIONES -----------------------------
 
@@ -38,24 +35,25 @@ async function initItems(){
     //obtenemos los botones de agregar al carrito
     btnAddToCarrito = document.getElementsByClassName('btnAddCarrito')
 
-    ArrBotonesCarrito = Array.from(btnAddToCarrito)
-    for (let btn of ArrBotonesCarrito){
-        btn.addEventListener('click', cargarProducto)
+    ArrCartButtons = Array.from(btnAddToCarrito)
+    for (let btn of ArrCartButtons){
+        btn.addEventListener('click', loadProduct)
     }
 }
 
 function filtrar(){
     result.innerHTML = '';
 
+    //getting the text of searchbar
     searchTxt = searchBar.value.toLowerCase();
 
-    for(let producto of productos){
-        let nombre = producto.nombre.toLowerCase()
+    for(let product of products){
+        //get the name of every product
+        let productName = product.name.toLowerCase()
 
-        if(nombre.indexOf(searchTxt) !== -1){
-            
-            createItems(producto);
-
+        //when text match return '-1'
+        if(productName.indexOf(searchTxt) !== -1){
+            createItems(product);
         }
     }
 
@@ -67,58 +65,58 @@ function filtrar(){
         item.addEventListener('click', btnClick)
     }
 
-    //obtenemos los botones de agregar al carrito
-    btnAddToCarrito = document.getElementsByClassName('btnAddCarrito')
+    //get Add to Cart button
+    btnAddToCart = document.getElementsByClassName('btnAddCarrito')
 
-    ArrBotonesCarrito = Array.from(btnAddToCarrito)
-    for (let btn of ArrBotonesCarrito){
-        btn.addEventListener('click', cargarProducto)
+    ArrCartButtons = Array.from(btnAddToCart)
+    for (let btn of ArrCartButtons){
+        btn.addEventListener('click', loadProduct)
     }
 }
 
-function Producto(nombre, precio, imagen, cantidad){
-    this.nombre = nombre
-    this.precio = precio
-    this.imagen = imagen
-    this.cantidad = cantidad
+function Product(name, price, image, qantity){
+    this.name = name
+    this.price = price
+    this.image = image
+    this.qantity = qantity
 }
 
 async function fetchData(){
     result.innerHTML = '';
-    await fetch('./ListaDeProductos.json')
+    await fetch('../assets/resources/ProductsList.json')
     .then((res) => res.json())
     .then((data) => {
         data.forEach((prod) => {
 
             const searchTxt = searchBar.value.toLowerCase()
 
-            let nombre = prod.nombre.toLowerCase()
+            let name = prod.name.toLowerCase()
 
-            if(nombre.indexOf(searchTxt) !== -1){
+            if(name.indexOf(searchTxt) !== -1){
                 
                 createItems(prod);
 
             }
 
-            productos.push(prod);
+            products.push(prod);
         });
     })
 }
 
-function cargarProducto(e){
+function loadProduct(e){
     e.preventDefault();
-    let nombreProd, precioProd, cantidadProd, imagenProd;
+    let nameProd, priceProd, qantityProd, imageProd;
 
     let hijos = e.target.parentNode.parentElement.childNodes;
     for (let nodo of hijos){
         if(nodo.className === 'card-header'){
-            nombreProd = nodo.innerHTML
+            nameProd = nodo.innerHTML
         }
         
         if(nodo.className === 'imagenes-container'){
             let hijo1 = nodo.childNodes
             for(let hijoaux of hijo1){
-                imagenProd = hijoaux.getAttribute("src")
+                imageProd = hijoaux.getAttribute("src")
             }
         }
 
@@ -126,36 +124,36 @@ function cargarProducto(e){
             let hijo2 = nodo.childNodes
             for(let hijoaux of hijo2){
                 if(hijoaux.className === 'card-title'){
-                    precioProd = hijoaux.innerHTML
+                    priceProd = hijoaux.innerHTML
                 }
 
                 if (hijoaux.className === 'txtCantidad'){
-                    cantidadProd = hijoaux.innerHTML
+                    qantityProd = hijoaux.innerHTML
                 }
             }
             
         }
     }
-    const productoSeleccionado = new Producto(nombreProd, precioProd, imagenProd, cantidadProd)
+    const selectedProduct = new Product(nameProd, priceProd, imageProd, qantityProd)
 
-    addToCarrito(productoSeleccionado)
+    addToCart(selectedProduct)
 
-    console.log(carrito)
+    console.log(shopCart)
 }
 
-function addToCarrito(producto){
+function addToCart(product){
 
     //mostramos una alerta de que el producto fue agregado al carrito
     swal({
         title: 'Producto agregado!',
-        text: 'Se ha agregado el producto ' + producto.nombre + ' al carrito',
+        text: 'Se ha agregado el producto ' + product.name + ' al carrito',
         icon: 'success',
         timer: 1100,
         buttons: false,
     })
 
-    carrito.push(producto)
-    localStorage.setItem('carrito', JSON.stringify(carrito))
+    shopCart.push(product)
+    localStorage.setItem('carrito', JSON.stringify(shopCart))
 }
 
 function filtrarByCategory(e){
@@ -246,7 +244,7 @@ function createItems(productItem){
 
     //card's header
     cardHeader.classList = 'card-header';
-    cardHeader.innerText = `${productItem.nombre}`;
+    cardHeader.innerText = `${productItem.name}`;
     
     itemCard.appendChild(cardHeader);
     itemGrid.appendChild(itemCard);
@@ -265,7 +263,7 @@ function createItems(productItem){
 
     //price value
     priceTitle.classList = 'card-title';
-    priceTitle.innerText = '$' + productItem.valor;
+    priceTitle.innerText = '$' + productItem.price;
 
     price.appendChild(priceTitle);
 
