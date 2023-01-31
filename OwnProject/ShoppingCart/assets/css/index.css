@@ -52,6 +52,17 @@ body{
     
 }
 
+.cardContainer{
+    height: 300px;
+}
+
+.cardHeader{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    place-items: center;
+}
+
 .container{
     display: flex;
 }
@@ -192,17 +203,17 @@ img {
     
 }
 
-.items-grilla{
+.grid-items{
     display: inline-block;
     width: 200px;
-    height: 370px;
+    height: 330px;
     margin-left: 10px;
 }
 
-.items-grilla:hover{
+.grid-items:hover{
     display: inline-block;
     width: 200px;
-    height: 200px;
+    /* height: 300px; */
     margin-left: 10px;
     box-shadow: #ff0000 10px;
     border-radius: 15px;

@@ -1,4 +1,4 @@
-let searchTxt, arrItems, btnAddToCarrito, ArrCartButtons
+let searchTxt, arrItems, btnAddToCart, ArrCartButtons
 let btnSearch, result
 const searchBar = document.getElementById('SearchBar');
 let items = []
@@ -13,18 +13,18 @@ function eventListeners(){
 
     //define the function for the search bar
     // let searchBar = document.getElementById('SearchBar');
-    searchBar.addEventListener('keyup', filtrar);
+    searchBar.addEventListener('keyup', filterItems);
 }
 
 btnSearch = document.getElementById('BtnSearch')
-result = document.getElementById('ListaProductos')
+result = document.getElementById('ProductsList')
 
 // ------------------------------- FUNCIONES -----------------------------
 
 async function initItems(){
     await fetchData();
 
-    let items = document.getElementsByClassName('items-grilla');
+    let items = document.getElementsByClassName('grid-items');
 
     arrItems = Array.from(items);
 
@@ -33,15 +33,15 @@ async function initItems(){
     }
 
     //obtenemos los botones de agregar al carrito
-    btnAddToCarrito = document.getElementsByClassName('btnAddCarrito')
+    btnAddToCart = document.getElementsByClassName('btnAddCart');
 
-    ArrCartButtons = Array.from(btnAddToCarrito)
+    ArrCartButtons = Array.from(btnAddToCart);
     for (let btn of ArrCartButtons){
         btn.addEventListener('click', loadProduct)
     }
 }
 
-function filtrar(){
+function filterItems(){
     result.innerHTML = '';
 
     //getting the text of searchbar
@@ -57,7 +57,7 @@ function filtrar(){
         }
     }
 
-    items = document.getElementsByClassName('items-grilla')
+    items = document.getElementsByClassName('grid-items')
 
     arrItems = Array.from(items)
 
@@ -66,7 +66,7 @@ function filtrar(){
     }
 
     //get Add to Cart button
-    btnAddToCart = document.getElementsByClassName('btnAddCarrito')
+    btnAddToCart = document.getElementsByClassName('btnAddCart');
 
     ArrCartButtons = Array.from(btnAddToCart)
     for (let btn of ArrCartButtons){
@@ -235,15 +235,16 @@ function createItems(productItem){
 
     //create the card div container
     
-    itemGrid.classList = 'items-grilla';
+    itemGrid.classList = 'grid-items';
     itemGrid.id = 'itemsGrilla'
     
     //create the card
-    itemCard.classList = 'card border-primary mb-3';
-    itemCard.innerHTML = `<style="max-width: 18rem;/>`;
+    itemCard.classList = 'card border-primary cardContainer';
+    // itemCard.innerHTML = `<style="max-width: 18rem;/>`;
+    // itemCard.style = 'style="max-width: 18rem height:auto"';
 
     //card's header
-    cardHeader.classList = 'card-header';
+    cardHeader.classList = 'card-header cardHeader';
     cardHeader.innerText = `${productItem.name}`;
     
     itemCard.appendChild(cardHeader);
@@ -286,7 +287,7 @@ function createItems(productItem){
     price.appendChild(plusButton);
 
     //add to cart button
-    addButton.classList = 'btn btn-primary btnAddCarrito';
+    addButton.classList = 'btn btn-primary btnAddCart';
     addButton.innerText = 'Agregar al carrito';
 
     price.appendChild(addButton);
